@@ -1,0 +1,8 @@
+Package: tafsys
+Version: 0.0.1
+Section: devel
+Priority: optional
+Architecture: amd64
+Homepage:  https://www.tafchain.com/#/index
+Maintainer: king 
+Description: taf software for tafchain
