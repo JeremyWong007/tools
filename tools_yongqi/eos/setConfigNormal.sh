@@ -20,7 +20,7 @@ cleos --url http://127.0.0.1:8889/ create account eosio eosio.token EOS6Kc7LVUHV
 cleos --url http://127.0.0.1:8889/ create account eosio eosio.vpay EOS6Kc7LVUHVxauut2rj8Rwk21mXAYpvLoNsJf3C1vFLFjhGeeHHM
 cleos --url http://127.0.0.1:8889/ create account eosio eosio.rex EOS6Kc7LVUHVxauut2rj8Rwk21mXAYpvLoNsJf3C1vFLFjhGeeHHM
 
-curl --request POST --url http://127.0.0.1:8889/v1/maker/schedule_protocol_feature_activations   -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
+curl --request POST --url http://127.0.0.1:8889/v1/producer/schedule_protocol_feature_activations   -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
 echo "sleep 1 start"
 sleep 1
 echo "sleep 1 end"

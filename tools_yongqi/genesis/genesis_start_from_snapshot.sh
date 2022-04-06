@@ -25,6 +25,7 @@ ${config_general} \
 --plugin tafsys::history_plugin \
 --plugin tafsys::txn_test_gen_plugin \
 --txn-test-gen-threads 6 \
+--snapshot /data/info/snapshot-000065d45066727e93f86159112df2f9e926da94ac011f8ba6f941e6adb009fd.bin \
 --data-dir $DATADIR"/data" \
 --blocks-dir $DATADIR"/blocks" \
 --config-dir $DATADIR"/config" \
@@ -40,7 +41,6 @@ ${config_general} \
 --p2p-max-nodes-per-host 100 \
 --chain-state-db-size-mb=102400 \
 ${config_genesis_start} \
---genesis-json $DATADIR"/../../genesis.json" \
 ${config_personality} \
 --http-server-address 0.0.0.0:8888 \
 --p2p-listen-endpoint 0.0.0.0:9010 \

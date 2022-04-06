@@ -1,63 +1,26 @@
 #!/bin/bash
-#set -u
-#set -x
+#set -e #当脚本中任何以一个命令执行返回的状态码不为0时就退出整个脚本
+#set -u #当脚本在执行过程中尝试使用未定义过的变量时，报错并退出运行整个脚本
+#set -x #设置-x选项后，之后执行的每一条命令，都会显示的打印出来
+
+CURRENT_DIR="$(cd "$(dirname "$0")"; pwd)"
+cd $CURRENT_DIR
 
 source globalInfo.sh
-function correctNum(){
-    if [ $NUM_TMP -lt 101 ]; then
-        NUM_TMP=`expr 240 - 100 + $NUM_TMP`
-    elif [ $NUM_TMP -gt 240 ]; then
-        NUM_TMP=`expr $NUM_TMP - 240 + 100`
-    fi
+source /data/info/env.taf
+
+BASE_DIR="/data/biosboot/pubchain"
+num=$TAF_NODE_NUM
+echo $num
+
+function setP2pAddrV1(){
+    SETTING_P2P_ADDRESS="--p2p-peer-address 192.168.0.230:9010 \
+    --p2p-peer-address 192.168.0.232:9010 \
+    --p2p-peer-address 192.168.0.233:9010 "
+    echo $SETTING_P2P_ADDRESS
 }
-function setCommand(){
-    NUM_TMP=`expr $num - 1`
-    correctNum
-    numb1=$NUM_TMP
-    NUM_TMP=`expr $num - 2`
-    correctNum
-    numb2=$NUM_TMP
-    NUM_TMP=`expr $num - 3`
-    correctNum
-    numb3=$NUM_TMP
-    NUM_TMP=`expr $num - 4`
-    correctNum
-    numb4=$NUM_TMP
-    NUM_TMP=`expr $num - 5`
-    correctNum
-    numb5=$NUM_TMP
-    NUM_TMP=`expr $num + 1`
-    correctNum
-    num1=$NUM_TMP
-    NUM_TMP=`expr $num + 2`
-    correctNum
-    num2=$NUM_TMP
-    NUM_TMP=`expr $num + 3`
-    correctNum
-    num3=$NUM_TMP
-    NUM_TMP=`expr $num + 4`
-    correctNum
-    num4=$NUM_TMP
-    NUM_TMP=`expr $num + 5`
-    correctNum
-    num5=$NUM_TMP
-    NUM_TMP=`expr $num + 32`
-    correctNum
-    numj1=$NUM_TMP
-    NUM_TMP=`expr $num + 48`
-    correctNum
-    numj2=$NUM_TMP
-    NUM_TMP=`expr $num + 64`
-    correctNum
-    numj3=$NUM_TMP
-    NUM_TMP=`expr $num + 80`
-    correctNum
-    numj4=$NUM_TMP
-    NUM_TMP=`expr $num + 96`
-    correctNum
-    numj5=$NUM_TMP
-    echo "show num: $numb5 $numb4 $numb3 $numb2 $numb1 $num1 $num2 $num3 $num4 $num5 $numj1 $numj2 $numj3 $numj4 $numj5"
-    
+
+function setCommand(){    
     CMD="tafcored \
     --plugin tafsys::maker_plugin \
     --plugin tafsys::maker_api_plugin \
@@ -66,6 +29,9 @@ function setCommand(){
     --plugin tafsys::http_plugin \
     --plugin tafsys::history_api_plugin \
     --plugin tafsys::history_plugin \
+    --plugin tafsys::net_plugin \
+    --plugin tafsys::txn_test_gen_plugin \
+    --txn-test-gen-threads 6 \
     --data-dir $DATADIR"/data" \
     --blocks-dir $DATADIR"/blocks" \
     --config-dir $DATADIR"/config" \
@@ -80,25 +46,13 @@ function setCommand(){
     --tafwalletd-provider-timeout 5000 \
     --p2p-max-nodes-per-host 100 \
     --chain-state-db-size-mb=102400 \
-    --genesis-json "../genesis101.json" \
+    --max-clients 300 \
+    --genesis-json "../genesis3.json" \
     --logconf=../logging.json \
     --http-server-address 0.0.0.0:$HTTP_LISTEN_PORT \
     --p2p-listen-endpoint 0.0.0.0:$P2P_LISTEN_PORT \
-    --p2p-peer-address 192.168.101.$num1:9010 \
-    --p2p-peer-address 192.168.101.$num2:9010 \
-    --p2p-peer-address 192.168.101.$num3:9010 \
-    --p2p-peer-address 192.168.101.$num4:9010 \
-    --p2p-peer-address 192.168.101.$num5:9010 \
-    --p2p-peer-address 192.168.101.$numb1:9010 \
-    --p2p-peer-address 192.168.101.$numb2:9010 \
-    --p2p-peer-address 192.168.101.$numb3:9010 \
-    --p2p-peer-address 192.168.101.$numb4:9010 \
-    --p2p-peer-address 192.168.101.$numb5:9010 \
-    --p2p-peer-address 192.168.101.$numj1:9010 \
-    --p2p-peer-address 192.168.101.$numj2:9010 \
-    --p2p-peer-address 192.168.101.$numj3:9010 \
-    --p2p-peer-address 192.168.101.$numj4:9010 \
-    --p2p-peer-address 192.168.101.$numj5:9010 \
+    $SETTING_P2P_ADDRESS \
+    $HARD_REPLAY_CONFIG \
     --maker-name $NAME \
     --signature-provider $PROVIDER \
     >> $DATADIR"/tafcored.log" 2>&1 & "
@@ -110,23 +64,70 @@ function cleanRoom(){
     sleep 0.1
 }
 
-pkill tafcored
-sleep 0.1
-#cleanRoom
+function usage() {
+    echo "Usage:"
+    echo " getopt <optstring> <parameters>"
+    echo ""
+    echo "Exapmple:"
+    echo " ./rebootReleaseChain.sh --p2pAddr v1"
+    exit 1
+}
+
+ARGS=`getopt -o h --long clean,hardReplay,p2pAddr: -n 'rebootReleaseChain.sh' -- "$@"`
+if [ $? != 0 ]; then
+    echo "Terminating..."
+    exit 1
+fi
+
+#将规范化后的命令行参数分配至位置参数（$1,$2,...)
+eval set -- "${ARGS}"
+while true
+do
+    case "$1" in
+        --clean)
+            CLEAN_OLD_BLOCK="true"
+            shift
+            ;;
+        --hardReplay)
+            echo "set --hard-replay-blockchain"
+            HARD_REPLAY_CONFIG="--hard-replay-blockchain"
+            shift
+            ;;
+        --p2pAddr)
+            case "$2" in
+                v1)
+                    echo "p2pAddr is v1"
+                    setP2pAddrV1
+                    shift 2
+                    ;;
+            esac
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -h)
+            usage
+            ;;
+        *)
+            echo "Internal error!"
+            exit 1
+            ;;
+    esac
+done
+
+pkillAndWait tafcored
+if [ "$CLEAN_OLD_BLOCK" == "true" ]; then
+    echo "cleanRoom in"
+    cleanRoom
+fi
 getContractPath $@
 
-#打开钱包
-./unlock.sh
-
-BASE_DIR="/data/biosboot/pubchain"
-GENESIS_NUM=101
-HOSTNAME=$(hostname)
-num=${HOSTNAME#node}
-echo $num
-
-if [ "$num" == "$GENESIS_NUM" ]
+if [ "$num" == "0" ]
 then
 	echo "genesis start."
+    #打开钱包
+    ./unlock.sh
     ./importKey.sh
 
     GENESIS_ACCOUNT_PROVIDER="TAF6Kc7LVUHVxauut2rj8Rwk21mXAYpvLoNsJf3C1vFLFjhGeeHHM=KEY:5JLrjLzKiWvecrUkBBPEBm4Wt8F7ECygLNnLhhLW64fCGP5RUvH"
@@ -141,15 +142,17 @@ then
     setCommand    
     echo $CMD
     eval $CMD
-
-    sleep 1
-    ./setConfigNormal.sh $CONTRACT_PATH
-    #./setConfigVote140.sh
-    #./test_command.sh
+    
+    if [ "$CLEAN_OLD_BLOCK" == "true" ]; then
+        sleep 1
+        #./setConfigNormal.sh $CONTRACT_PATH
+        #./setConfigVote140.sh 21
+        #./test_command.sh
+    fi
 	echo "genesis start end."
 else
     echo "full node start."
-    keyNum=`expr ${num} - ${GENESIS_NUM} - 1`
+    keyNum=${num}
     if [ "$keyNum" -ge "0" ] && [ "$keyNum" -lt "${#public_keys[@]}" ];
     then
         currentKey=${public_keys[$keyNum]}

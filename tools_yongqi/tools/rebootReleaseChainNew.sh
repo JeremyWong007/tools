@@ -1,6 +1,7 @@
 #!/bin/bash
-#set -u
-#set -x
+#set -e #当脚本中任何以一个命令执行返回的状态码不为0时就退出整个脚本
+#set -u #当脚本在执行过程中尝试使用未定义过的变量时，报错并退出运行整个脚本
+#set -x #设置-x选项后，之后执行的每一条命令，都会显示的打印出来
 
 CURRENT_DIR="$(cd "$(dirname "$0")"; pwd)"
 cd $CURRENT_DIR
@@ -19,54 +20,55 @@ function correctNum(){
         NUM_TMP=`expr $NUM_TMP - 240 + 100`
     fi
 }
-function setP2pAddrLocal140(){
-    NUM_TMP=`expr $num - 1`
+
+function setP2pAddrLocal2Local(){
+    NUM_TMP=`expr $num + 101  - 1`
     correctNum
     numb1=$NUM_TMP
-    NUM_TMP=`expr $num - 2`
+    NUM_TMP=`expr $num + 101 - 2`
     correctNum
     numb2=$NUM_TMP
-    NUM_TMP=`expr $num - 3`
+    NUM_TMP=`expr $num + 101 - 3`
     correctNum
     numb3=$NUM_TMP
-    NUM_TMP=`expr $num - 4`
+    NUM_TMP=`expr $num + 101 - 4`
     correctNum
     numb4=$NUM_TMP
-    NUM_TMP=`expr $num - 5`
+    NUM_TMP=`expr $num + 101 - 5`
     correctNum
     numb5=$NUM_TMP
-    NUM_TMP=`expr $num + 1`
+    NUM_TMP=`expr $num + 101 + 1`
     correctNum
     num1=$NUM_TMP
-    NUM_TMP=`expr $num + 2`
+    NUM_TMP=`expr $num + 101 + 2`
     correctNum
     num2=$NUM_TMP
-    NUM_TMP=`expr $num + 3`
+    NUM_TMP=`expr $num + 101 + 3`
     correctNum
     num3=$NUM_TMP
-    NUM_TMP=`expr $num + 4`
+    NUM_TMP=`expr $num + 101 + 4`
     correctNum
     num4=$NUM_TMP
-    NUM_TMP=`expr $num + 5`
+    NUM_TMP=`expr $num + 101 + 5`
     correctNum
     num5=$NUM_TMP
-    NUM_TMP=`expr $num + 32`
+    NUM_TMP=`expr $num + 101 + 32`
     correctNum
     numj1=$NUM_TMP
-    NUM_TMP=`expr $num + 48`
+    NUM_TMP=`expr $num + 101 + 48`
     correctNum
     numj2=$NUM_TMP
-    NUM_TMP=`expr $num + 64`
+    NUM_TMP=`expr $num + 101 + 64`
     correctNum
     numj3=$NUM_TMP
-    NUM_TMP=`expr $num + 80`
+    NUM_TMP=`expr $num + 101 + 80`
     correctNum
     numj4=$NUM_TMP
-    NUM_TMP=`expr $num + 96`
+    NUM_TMP=`expr $num + 101 + 96`
     correctNum
     numj5=$NUM_TMP
     echo "show p2p num: $numb5 $numb4 $numb3 $numb2 $numb1 $num1 $num2 $num3 $num4 $num5 $numj1 $numj2 $numj3 $numj4 $numj5"
-    SETTING_P2P_ADDRESS="--p2p-peer-address 192.168.101.$num1:9010 \
+    SETTING_P2P_ADDRESS_LOCAL2LOCAL="--p2p-peer-address 192.168.101.$num1:9010 \
     --p2p-peer-address 192.168.101.$num2:9010 \
     --p2p-peer-address 192.168.101.$num3:9010 \
     --p2p-peer-address 192.168.101.$num4:9010 \
@@ -89,8 +91,8 @@ function setP2pAddrPubAli(){
     --p2p-peer-address 13.230.34.236:9010 \
     --p2p-peer-address 18.176.224.246:9010 \
     --p2p-peer-address 18.180.156.94:9010 \
-    --p2p-peer-address 18.180.54.99:9010 \
-    --p2p-peer-address 18.181.233.85:9010 \
+    --p2p-peer-address 35.77.32.87:9010 \
+    --p2p-peer-address 35.75.22.237:9010 \
     --p2p-peer-address 18.183.203.208:9010 \
     --p2p-peer-address 3.112.63.128:9010 \
     --p2p-peer-address 3.115.1.53:9010 \
@@ -122,8 +124,8 @@ function setP2pAddrPubYMX(){
     --p2p-peer-address 13.230.34.236:9010 \
     --p2p-peer-address 18.176.224.246:9010 \
     --p2p-peer-address 18.180.156.94:9010 \
-    --p2p-peer-address 18.180.54.99:9010 \
-    --p2p-peer-address 18.181.233.85:9010 \
+    --p2p-peer-address 35.77.32.87:9010 \
+    --p2p-peer-address 35.75.22.237:9010 \
     --p2p-peer-address 18.183.203.208:9010 \
     --p2p-peer-address 3.112.63.128:9010 \
     --p2p-peer-address 3.115.1.53:9010 \
@@ -174,6 +176,156 @@ function setP2pAddrPubV2(){
     --p2p-peer-address 220.189.210.50:9109"
 }
 
+function setP2pAddrV3(){
+    SETTING_P2P_ADDRESS="--p2p-peer-address 121.41.199.36:9010 \
+    --p2p-peer-address 121.41.199.39:9010 \
+    --p2p-peer-address 121.41.193.65:9010 \
+    --p2p-peer-address 121.41.197.161:9010 \
+    --p2p-peer-address 121.41.197.238:9010 \
+    --p2p-peer-address 121.41.197.97:9010 \
+    \
+    --p2p-peer-address 35.72.35.95:9010 \
+    --p2p-peer-address 35.74.78.197:9010 \
+    --p2p-peer-address 13.230.34.236:9010 \
+    --p2p-peer-address 18.176.224.246:9010 \
+    --p2p-peer-address 18.180.156.94:9010 \
+    --p2p-peer-address 35.77.32.87:9010 \
+    --p2p-peer-address 35.75.22.237:9010 \
+    --p2p-peer-address 18.183.203.208:9010 \
+    --p2p-peer-address 3.112.63.128:9010 \
+    --p2p-peer-address 3.115.1.53:9010 \
+    --p2p-peer-address 35.74.253.51:9010 \
+    --p2p-peer-address 35.76.107.8:9010 "
+    
+    SETTING_P2P_ADDRESS_LOCAL2PUB="--p2p-peer-address 220.189.210.50:9221 \
+    --p2p-peer-address 220.189.210.50:9213 \
+    --p2p-peer-address 220.189.210.50:9205 \
+    --p2p-peer-address 220.189.210.50:9197 \
+    --p2p-peer-address 220.189.210.50:9189 \
+    --p2p-peer-address 220.189.210.50:9181 \
+    --p2p-peer-address 220.189.210.50:9173 \
+    --p2p-peer-address 220.189.210.50:9165 \
+    --p2p-peer-address 220.189.210.50:9157 \
+    --p2p-peer-address 220.189.210.50:9149 \
+    --p2p-peer-address 220.189.210.50:9141 \
+    --p2p-peer-address 220.189.210.50:9133 \
+    --p2p-peer-address 220.189.210.50:9125 \
+    --p2p-peer-address 220.189.210.50:9117 \
+    --p2p-peer-address 220.189.210.50:9229 \
+    --p2p-peer-address 220.189.210.50:9109 \
+    \
+    --p2p-peer-address 220.189.210.50:9010 \
+    --p2p-peer-address 220.189.210.50:9102 \
+    --p2p-peer-address 220.189.210.50:9103 \
+    --p2p-peer-address 220.189.210.50:9104 \
+    --p2p-peer-address 220.189.210.50:9105 \
+    --p2p-peer-address 220.189.210.50:9109 "
+    echo "num is $num"
+    if [ ${num} -lt 140 ]; then
+        setP2pAddrLocal2Local
+        SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS}${SETTING_P2P_ADDRESS_LOCAL2LOCAL}
+        echo $SETTING_P2P_ADDRESS
+    else
+        SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS}${SETTING_P2P_ADDRESS_LOCAL2PUB}
+        echo $SETTING_P2P_ADDRESS
+    fi
+}
+
+function setP2pAddrV4(){
+    SETTING_P2P_ADDRESS_PUB="--p2p-peer-address 121.41.199.36:9010 \
+    --p2p-peer-address 121.41.199.39:9010 \
+    --p2p-peer-address 121.41.193.65:9010 \
+    --p2p-peer-address 121.41.197.161:9010 \
+    --p2p-peer-address 121.41.197.238:9010 \
+    --p2p-peer-address 121.41.197.97:9010 \
+    \
+    --p2p-peer-address 35.72.35.95:9010 \
+    --p2p-peer-address 35.74.78.197:9010 \
+    --p2p-peer-address 13.230.34.236:9010 \
+    --p2p-peer-address 18.176.224.246:9010 \
+    --p2p-peer-address 18.180.156.94:9010 \
+    --p2p-peer-address 35.77.32.87:9010 \
+    --p2p-peer-address 35.75.22.237:9010 \
+    --p2p-peer-address 18.183.203.208:9010 \
+    --p2p-peer-address 3.112.63.128:9010 \
+    --p2p-peer-address 3.115.1.53:9010 \
+    --p2p-peer-address 35.74.253.51:9010 \
+    --p2p-peer-address 35.76.107.8:9010 "
+    
+    SETTING_P2P_ADDRESS_PUB2LOCAL="--p2p-peer-address 220.189.210.50:9221 \
+    --p2p-peer-address 220.189.210.50:9213 "
+    echo "num is $num"
+    if [ ${num} -lt 140 ]; then
+        setP2pAddrLocal2Local
+        if [ ${num} -ge 138 ]; then
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_PUB}${SETTING_P2P_ADDRESS_LOCAL2LOCAL}
+        else
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_LOCAL2LOCAL}
+        fi
+    else
+        if [[ ${num} == ${AliHostNum["121.41.193.65"]} || ${num} == ${YamaxunHostNum["13.230.34.236"]} ]]; then
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_PUB}${SETTING_P2P_ADDRESS_PUB2LOCAL}
+        else
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_PUB}
+        fi
+    fi
+    echo $SETTING_P2P_ADDRESS
+}
+
+function setP2pAddrV5(){
+    SETTING_P2P_ADDRESS_PUB="--p2p-peer-address 121.41.199.36:9010 \
+    --p2p-peer-address 121.41.199.39:9010 \
+    --p2p-peer-address 121.41.193.65:9010 \
+    --p2p-peer-address 121.41.197.161:9010 \
+    --p2p-peer-address 121.41.197.238:9010 \
+    --p2p-peer-address 121.41.197.97:9010 \
+    \
+    --p2p-peer-address 35.72.35.95:9010 \
+    --p2p-peer-address 35.74.78.197:9010 \
+    --p2p-peer-address 13.230.34.236:9010 \
+    --p2p-peer-address 18.176.224.246:9010 \
+    --p2p-peer-address 18.180.156.94:9010 \
+    --p2p-peer-address 35.77.32.87:9010 \
+    --p2p-peer-address 35.75.22.237:9010 \
+    --p2p-peer-address 18.183.203.208:9010 \
+    --p2p-peer-address 3.112.63.128:9010 \
+    --p2p-peer-address 3.115.1.53:9010 \
+    --p2p-peer-address 35.74.253.51:9010 \
+    --p2p-peer-address 35.76.107.8:9010 "
+
+    SETTING_P2P_ADDRESS_LOCAL2LOCAL="--p2p-peer-address 192.168.101.101:9010 \
+    --p2p-peer-address 192.168.101.102:9010 \
+    --p2p-peer-address 192.168.101.103:9010 \
+    --p2p-peer-address 192.168.101.109:9010 \
+    --p2p-peer-address 192.168.101.110:9010 \
+    --p2p-peer-address 192.168.101.111:9010 \
+    --p2p-peer-address 192.168.101.117:9010 \
+    --p2p-peer-address 192.168.101.118:9010 \
+    --p2p-peer-address 192.168.101.119:9010 \
+    --p2p-peer-address 192.168.101.125:9010 \
+    --p2p-peer-address 192.168.101.126:9010 \
+    --p2p-peer-address 192.168.101.127:9010 \
+    --p2p-peer-address 192.168.101.141:9010"
+    
+    SETTING_P2P_ADDRESS_PUB2LOCAL="--p2p-peer-address 220.189.210.50:9012 \
+    --p2p-peer-address 220.189.210.50:9013 "
+    echo "num is $num"
+    if [ ${num} -lt 140 ]; then
+        if [ ${num} -ge 138 ]; then
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_PUB}${SETTING_P2P_ADDRESS_LOCAL2LOCAL}
+        else
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_LOCAL2LOCAL}
+        fi
+    else
+        if [[ ${num} == ${AliHostNum["121.41.193.65"]} || ${num} == ${YamaxunHostNum["13.230.34.236"]} ]]; then
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_PUB}${SETTING_P2P_ADDRESS_PUB2LOCAL}
+        else
+            SETTING_P2P_ADDRESS=${SETTING_P2P_ADDRESS_PUB}
+        fi
+    fi
+    echo $SETTING_P2P_ADDRESS
+}
+
 function setCommand(){    
     CMD="tafcored \
     --plugin tafsys::maker_plugin \
@@ -198,12 +350,13 @@ function setCommand(){
     --tafwalletd-provider-timeout 5000 \
     --p2p-max-nodes-per-host 100 \
     --chain-state-db-size-mb=102400 \
-    --max-clients 0 \
+    --max-clients 300 \
     --genesis-json "../genesis2.json" \
     --logconf=../logging.json \
     --http-server-address 0.0.0.0:$HTTP_LISTEN_PORT \
     --p2p-listen-endpoint 0.0.0.0:$P2P_LISTEN_PORT \
     $SETTING_P2P_ADDRESS \
+    $HARD_REPLAY_CONFIG \
     --maker-name $NAME \
     --signature-provider $PROVIDER \
     >> $DATADIR"/tafcored.log" 2>&1 & "
@@ -227,6 +380,9 @@ function usage() {
     echo " ./rebootReleaseChainNew.sh --p2pAddr pubAli --hardReplay"
     echo " ./rebootReleaseChainNew.sh --p2pAddr localv2 --clean"
     echo " ./rebootReleaseChainNew.sh --p2pAddr pubv2 --clean"
+    echo " ./rebootReleaseChainNew.sh --p2pAddr v3"
+    echo " ./rebootReleaseChainNew.sh --p2pAddr v4 #对应157节点的大网络"
+    echo " ./rebootReleaseChainNew.sh --p2pAddr v5 #对应缩小后的小网络，内部测试网"
     exit 1
 }
 
@@ -246,7 +402,8 @@ do
             shift
             ;;
         --hardReplay)
-            TAF_HARD_REPLAY="true"
+            echo "set --hard-replay-blockchain"
+            HARD_REPLAY_CONFIG="--hard-replay-blockchain"
             shift
             ;;
         --p2pAddr)
@@ -276,6 +433,21 @@ do
                     setP2pAddrPubV2
                     shift 2
                     ;;
+                v3)
+                    echo "p2pAddr is v3"
+                    setP2pAddrV3
+                    shift 2
+                    ;;
+                v4)
+                    echo "p2pAddr is v4"
+                    setP2pAddrV4
+                    shift 2
+                    ;;
+                v5)
+                    echo "p2pAddr is v5"
+                    setP2pAddrV5
+                    shift 2
+                    ;;
             esac
             ;;
         --)
@@ -292,20 +464,18 @@ do
     esac
 done
 
-pkill tafcored
-sleep 0.1
+pkillAndWait tafcored
 if [ "$CLEAN_OLD_BLOCK" == "true" ]; then
     echo "cleanRoom in"
     cleanRoom
 fi
 getContractPath $@
 
-#打开钱包
-./unlock.sh
-
 if [ "$num" == "0" ]
 then
 	echo "genesis start."
+    #打开钱包
+    ./unlock.sh
     ./importKey.sh
 
     GENESIS_ACCOUNT_PROVIDER="TAF6Kc7LVUHVxauut2rj8Rwk21mXAYpvLoNsJf3C1vFLFjhGeeHHM=KEY:5JLrjLzKiWvecrUkBBPEBm4Wt8F7ECygLNnLhhLW64fCGP5RUvH"
@@ -325,7 +495,7 @@ then
     if [ "$CLEAN_OLD_BLOCK" == "true" ]; then
         sleep 1
         #./setConfigNormal.sh $CONTRACT_PATH
-        #./setConfigVote140.sh
+        #./setConfigVote140.sh 21
         #./test_command.sh
     fi
 	echo "genesis start end."

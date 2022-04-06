@@ -17,8 +17,8 @@ config_hard_replay="--p2p-peer-address 1.1.1.1:7007"
 
 nodeos \
 ${config_general} \
---plugin eosio::maker_plugin \
---plugin eosio::maker_api_plugin \
+--plugin eosio::producer_plugin \
+--plugin eosio::producer_api_plugin \
 --plugin eosio::chain_plugin \
 --plugin eosio::chain_api_plugin \
 --plugin eosio::http_plugin \
@@ -45,7 +45,7 @@ ${config_personality} \
 --p2p-peer-address localhost:7012 \
 --p2p-peer-address localhost:7013 \
 ${config_not_genesis_node} \
---maker-name $CURDIRNAME \
+--producer-name $CURDIRNAME \
 --signature-provider EOS5EfU2fDgHZTNwPhuoHJgKcrNJ3PbyaYMHMrgMnBpVffWjgeJjX=KEY:5HxK6mfoNr1pbnbYs1AmsKjavJQaoxiNVUdeJD6ZPFZkQvGcZVM \
 ${config_hard_replay} \
 --hard-replay-blockchain \
